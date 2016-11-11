@@ -193,8 +193,6 @@ public struct JSON {
     public var error: NSError? { get { return self._error } }
     
     /// The static null JSON
-    @available(*, unavailable, renamed:"null")
-    public static var nullJSON: JSON { get { return null } }
     public static var null: JSON { get { return JSON(NSNull()) } }
 }
 
@@ -523,14 +521,6 @@ extension JSON: Swift.ExpressibleByArrayLiteral {
     }
 }
 
-extension JSON: Swift.ExpressibleByNilLiteral {
-
-    @available(*, deprecated, message: "use JSON.null instead. Will be removed in future versions")
-    public init(nilLiteral: ()) {
-        self.init(NSNull() as Any)
-    }
-}
-
 // MARK: - Raw
 
 extension JSON: Swift.RawRepresentable {
@@ -841,7 +831,7 @@ extension JSON {
 extension JSON {
     
     //Optional URL
-    public var URL: URL? {
+    public var url: URL? {
         get {
             switch self.type {
             case .string:
@@ -1136,90 +1126,92 @@ extension JSON {
 }
 
 //MARK: - Comparable
-extension JSON : Swift.Comparable {}
+extension JSON : Swift.Comparable {
 
-public func ==(lhs: JSON, rhs: JSON) -> Bool {
-    
-    switch (lhs.type, rhs.type) {
-    case (.number, .number):
-        return lhs.rawNumber == rhs.rawNumber
-    case (.string, .string):
-        return lhs.rawString == rhs.rawString
-    case (.bool, .bool):
-        return lhs.rawBool == rhs.rawBool
-    case (.array, .array):
-        return lhs.rawArray as NSArray == rhs.rawArray as NSArray
-    case (.dictionary, .dictionary):
-        return lhs.rawDictionary as NSDictionary == rhs.rawDictionary as NSDictionary
-    case (.null, .null):
-        return true
-    default:
-        return false
-    }
-}
+    static public func ==(lhs: JSON, rhs: JSON) -> Bool {
 
-public func <=(lhs: JSON, rhs: JSON) -> Bool {
-    
-    switch (lhs.type, rhs.type) {
-    case (.number, .number):
-        return lhs.rawNumber <= rhs.rawNumber
-    case (.string, .string):
-        return lhs.rawString <= rhs.rawString
-    case (.bool, .bool):
-        return lhs.rawBool == rhs.rawBool
-    case (.array, .array):
-        return lhs.rawArray as NSArray == rhs.rawArray as NSArray
-    case (.dictionary, .dictionary):
-        return lhs.rawDictionary as NSDictionary == rhs.rawDictionary as NSDictionary
-    case (.null, .null):
-        return true
-    default:
-        return false
+        switch (lhs.type, rhs.type) {
+        case (.number, .number):
+            return lhs.rawNumber == rhs.rawNumber
+        case (.string, .string):
+            return lhs.rawString == rhs.rawString
+        case (.bool, .bool):
+            return lhs.rawBool == rhs.rawBool
+        case (.array, .array):
+            return lhs.rawArray as NSArray == rhs.rawArray as NSArray
+        case (.dictionary, .dictionary):
+            return lhs.rawDictionary as NSDictionary == rhs.rawDictionary as NSDictionary
+        case (.null, .null):
+            return true
+        default:
+            return false
+        }
     }
-}
 
-public func >=(lhs: JSON, rhs: JSON) -> Bool {
-    
-    switch (lhs.type, rhs.type) {
-    case (.number, .number):
-        return lhs.rawNumber >= rhs.rawNumber
-    case (.string, .string):
-        return lhs.rawString >= rhs.rawString
-    case (.bool, .bool):
-        return lhs.rawBool == rhs.rawBool
-    case (.array, .array):
-        return lhs.rawArray as NSArray == rhs.rawArray as NSArray
-    case (.dictionary, .dictionary):
-        return lhs.rawDictionary as NSDictionary == rhs.rawDictionary as NSDictionary
-    case (.null, .null):
-        return true
-    default:
-        return false
-    }
-}
+    static public func <=(lhs: JSON, rhs: JSON) -> Bool {
 
-public func >(lhs: JSON, rhs: JSON) -> Bool {
-    
-    switch (lhs.type, rhs.type) {
-    case (.number, .number):
-        return lhs.rawNumber > rhs.rawNumber
-    case (.string, .string):
-        return lhs.rawString > rhs.rawString
-    default:
-        return false
+        switch (lhs.type, rhs.type) {
+        case (.number, .number):
+            return lhs.rawNumber <= rhs.rawNumber
+        case (.string, .string):
+            return lhs.rawString <= rhs.rawString
+        case (.bool, .bool):
+            return lhs.rawBool == rhs.rawBool
+        case (.array, .array):
+            return lhs.rawArray as NSArray == rhs.rawArray as NSArray
+        case (.dictionary, .dictionary):
+            return lhs.rawDictionary as NSDictionary == rhs.rawDictionary as NSDictionary
+        case (.null, .null):
+            return true
+        default:
+            return false
+        }
     }
-}
 
-public func <(lhs: JSON, rhs: JSON) -> Bool {
-    
-    switch (lhs.type, rhs.type) {
-    case (.number, .number):
-        return lhs.rawNumber < rhs.rawNumber
-    case (.string, .string):
-        return lhs.rawString < rhs.rawString
-    default:
-        return false
+    static public func >=(lhs: JSON, rhs: JSON) -> Bool {
+
+        switch (lhs.type, rhs.type) {
+        case (.number, .number):
+            return lhs.rawNumber >= rhs.rawNumber
+        case (.string, .string):
+            return lhs.rawString >= rhs.rawString
+        case (.bool, .bool):
+            return lhs.rawBool == rhs.rawBool
+        case (.array, .array):
+            return lhs.rawArray as NSArray == rhs.rawArray as NSArray
+        case (.dictionary, .dictionary):
+            return lhs.rawDictionary as NSDictionary == rhs.rawDictionary as NSDictionary
+        case (.null, .null):
+            return true
+        default:
+            return false
+        }
     }
+
+    static public func >(lhs: JSON, rhs: JSON) -> Bool {
+
+        switch (lhs.type, rhs.type) {
+        case (.number, .number):
+            return lhs.rawNumber > rhs.rawNumber
+        case (.string, .string):
+            return lhs.rawString > rhs.rawString
+        default:
+            return false
+        }
+    }
+    
+    static public func <(lhs: JSON, rhs: JSON) -> Bool {
+        
+        switch (lhs.type, rhs.type) {
+        case (.number, .number):
+            return lhs.rawNumber < rhs.rawNumber
+        case (.string, .string):
+            return lhs.rawString < rhs.rawString
+        default:
+            return false
+        }
+    }
+
 }
 
 private let trueNumber = NSNumber(value: true)
@@ -1240,67 +1232,67 @@ extension NSNumber {
             }
         }
     }
-}
 
-func ==(lhs: NSNumber, rhs: NSNumber) -> Bool {
-    switch (lhs.isBool, rhs.isBool) {
-    case (false, true):
-        return false
-    case (true, false):
-        return false
-    default:
-        return lhs.compare(rhs) == .orderedSame
+    static func ==(lhs: NSNumber, rhs: NSNumber) -> Bool {
+        switch (lhs.isBool, rhs.isBool) {
+        case (false, true):
+            return false
+        case (true, false):
+            return false
+        default:
+            return lhs.compare(rhs) == .orderedSame
+        }
     }
-}
 
-func !=(lhs: NSNumber, rhs: NSNumber) -> Bool {
-    return !(lhs == rhs)
-}
-
-func <(lhs: NSNumber, rhs: NSNumber) -> Bool {
-    
-    switch (lhs.isBool, rhs.isBool) {
-    case (false, true):
-        return false
-    case (true, false):
-        return false
-    default:
-        return lhs.compare(rhs) == .orderedAscending
+    static func !=(lhs: NSNumber, rhs: NSNumber) -> Bool {
+        return !(lhs == rhs)
     }
-}
 
-func >(lhs: NSNumber, rhs: NSNumber) -> Bool {
-    
-    switch (lhs.isBool, rhs.isBool) {
-    case (false, true):
-        return false
-    case (true, false):
-        return false
-    default:
-        return lhs.compare(rhs) == ComparisonResult.orderedDescending
+    static func <(lhs: NSNumber, rhs: NSNumber) -> Bool {
+
+        switch (lhs.isBool, rhs.isBool) {
+        case (false, true):
+            return false
+        case (true, false):
+            return false
+        default:
+            return lhs.compare(rhs) == .orderedAscending
+        }
     }
-}
 
-func <=(lhs: NSNumber, rhs: NSNumber) -> Bool {
-    
-    switch (lhs.isBool, rhs.isBool) {
-    case (false, true):
-        return false
-    case (true, false):
-        return false
-    default:
-        return lhs.compare(rhs) != .orderedDescending
+    static func >(lhs: NSNumber, rhs: NSNumber) -> Bool {
+
+        switch (lhs.isBool, rhs.isBool) {
+        case (false, true):
+            return false
+        case (true, false):
+            return false
+        default:
+            return lhs.compare(rhs) == ComparisonResult.orderedDescending
+        }
     }
-}
 
-func >=(lhs: NSNumber, rhs: NSNumber) -> Bool {
-    
-    switch (lhs.isBool, rhs.isBool) {
-    case (false, true):
-        return false
-    case (true, false):
-        return false
-    default:
-        return lhs.compare(rhs) != .orderedAscending
+    static func <=(lhs: NSNumber, rhs: NSNumber) -> Bool {
+
+        switch (lhs.isBool, rhs.isBool) {
+        case (false, true):
+            return false
+        case (true, false):
+            return false
+        default:
+            return lhs.compare(rhs) != .orderedDescending
+        }
+    }
+
+    static func >=(lhs: NSNumber, rhs: NSNumber) -> Bool {
+
+        switch (lhs.isBool, rhs.isBool) {
+        case (false, true):
+            return false
+        case (true, false):
+            return false
+        default:
+            return lhs.compare(rhs) != .orderedAscending
+        }
     }
 }

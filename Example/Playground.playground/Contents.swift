@@ -35,7 +35,7 @@ let json1 = JSON(data: jsonData!)
 /*:
  or
  */
-let json2 = JSON(jsonObject)
+let json2 = JSON(jsonObject as Any)
 /*:
  or
  */
